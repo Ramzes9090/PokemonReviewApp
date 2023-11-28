@@ -25,7 +25,6 @@ namespace PokemonReviewApp.Controllers
         public IActionResult GetPokemons()
         {
             var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
-            
 
             if (!ModelState.IsValid)
             {
@@ -41,7 +40,9 @@ namespace PokemonReviewApp.Controllers
         {
             if (!_pokemonRepository.PokemonExists(pokeId))
                 return NoContent();
-            var pokemon = _pokemonRepository.GetPokemon(pokeId);
+            
+            var pokemon = _mapper.Map<PokemonDto>(_pokemonRepository.GetPokemon(pokeId));
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
