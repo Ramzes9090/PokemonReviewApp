@@ -33,7 +33,7 @@ namespace PokemonReviewApp.Repository
 
         public ICollection<Owner> GetOwnersFromACountry(int countryId)
         {
-            return _context.Countries.Where(u => u.Id == countryId).Select(u => u.Owners).FirstOrDefault();
+            return _context.Owners.Where(u => u.Country.Id == countryId).ToList();
         }
     }
 }
