@@ -56,15 +56,15 @@ namespace PokemonReviewApp.Controllers
 
             return Ok(country);
         }
-        [HttpGet("/owners/{countryId}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetOwnersFromACountry(int countryId)
-        {
-            var owners = _mapper.Map<List<Owner>>(_countryRepository.GetOwnersFromACountry(countryId));
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            return Ok(owners);
-        }
+        //[HttpGet("/owners/{countryId}")]
+        //[ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
+        //[ProducesResponseType(400)]
+        //public IActionResult GetOwnersFromACountry(int countryId)
+        //{
+        //    var owners = _mapper.Map<List<Owner>>(_countryRepository.GetOwnersFromACountry(countryId));
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+        //    return Ok(owners);
+        //}
     }
 }
