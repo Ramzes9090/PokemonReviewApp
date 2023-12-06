@@ -62,5 +62,17 @@ namespace PokemonReviewApp.Controllers
                 return BadRequest();
             return Ok(rating);
         }
+        //[HttpPost]
+        //[ProducesResponseType(204)]
+        //[ProducesResponseType(400)]
+        //public IActionResult CreatePokemon(int pokeId)
+        //{
+        //    if (!_pokemonRepository.PokemonExists(pokeId))
+        //        return NotFound();
+        //    var rating = _pokemonRepository.GetPokemonRating(pokeId);
+        //    if (!ModelState.IsValid)
+        //        return BadRequest();
+        //    return Ok(rating);
+        //}
     }
 }
