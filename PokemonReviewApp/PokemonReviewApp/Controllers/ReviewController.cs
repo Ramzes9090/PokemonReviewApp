@@ -29,7 +29,7 @@ namespace PokemonReviewApp.Controllers
         public IActionResult GetReviews()
         {
             var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepository.GetReviews());
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -37,15 +37,15 @@ namespace PokemonReviewApp.Controllers
         }
 
         [HttpGet("{reviewId}")]
-        [ProducesResponseType(200, Type=typeof(Review))]
+        [ProducesResponseType(200, Type = typeof(Review))]
         [ProducesResponseType(400)]
-        public IActionResult GetReview(int reviewId) 
-        { 
-            if(!_reviewRepository.ReviewExists(reviewId))
+        public IActionResult GetReview(int reviewId)
+        {
+            if (!_reviewRepository.ReviewExists(reviewId))
                 return NotFound();
             var review = _mapper.Map<ReviewDto>(_reviewRepository.GetReview(reviewId));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -58,7 +58,7 @@ namespace PokemonReviewApp.Controllers
         public IActionResult GetReviewsOfAPokemon(int pokeId)
         {
             var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepository.GetReviewsOfAPokemon(pokeId));
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -67,33 +67,56 @@ namespace PokemonReviewApp.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult CreateReview([FromQuery]int reviewerId, [FromQuery]int pokeId, [FromBody] ReviewDto reviewCreate)
+        public IActionResult CreateReview([FromQuery] int reviewerId, [FromQuery] int pokeId, [FromBody] ReviewDto reviewCreate)
         {
-            if(reviewCreate == null)
+            if (reviewCreate == null)
                 return BadRequest(ModelState);
 
             var review = _reviewRepository.GetReviews()
                 .Where(r => r.Title.Trim().ToUpper() == reviewCreate.Title.TrimEnd().ToUpper())
                 .FirstOrDefault();
-            if(review != null)
+            if (review != null)
             {
                 ModelState.AddModelError("", "Review already exists");
                 return StatusCode(422, ModelState);
             }
-            if(!ModelState.IsValid)
-                return BadRequest(ModelState);  
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var reviewMap = _mapper.Map<Review>(reviewCreate);
 
             reviewMap.Pokemon = _pokemonRepository.GetPokemon(pokeId);
             reviewMap.Reviewer = _reviewerRepository.GetReviewer(reviewerId);
 
-            if(!_reviewRepository.CreateReview(reviewMap))
+            if (!_reviewRepository.CreateReview(reviewMap))
             {
                 ModelState.AddModelError("", "Something went wrond while saving");
                 return StatusCode(500, ModelState);
             }
             return Ok("Successfully created");
+        }
+        [HttpPut("{reviewId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateReview(int reviewId, [FromBody] ReviewDto updatedReview)
+        {
+            if(updatedReview == null)
+                return BadRequest(ModelState);
+            if(reviewId != updatedReview.Id)
+                return BadRequest(ModelState);
+            if (!_reviewRepository.ReviewExists(reviewId))
+                return NotFound();
+            if (!ModelState.IsValid) return BadRequest();
+
+            var reviewMap = _mapper.Map<Review>(updatedReview);
+            if (!_reviewRepository.UpdateReview(reviewMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully updated");
         }
     }
 }
