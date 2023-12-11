@@ -102,6 +102,7 @@ namespace PokemonReviewApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public IActionResult UpdateOwner(int ownerId, [FromBody] OwnerDto updatedOwner)
+
         {
             if (updatedOwner == null)
                 return BadRequest(ModelState);
