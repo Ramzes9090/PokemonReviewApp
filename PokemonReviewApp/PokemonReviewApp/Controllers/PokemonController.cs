@@ -74,9 +74,8 @@ namespace PokemonReviewApp.Controllers
             if (pokemonCreate == null)
                 return BadRequest(ModelState);
 
-            var pokemon = _pokemonRepository.GetPokemons()
-                .Where(p=>p.Name.Trim().ToUpper() == pokemonCreate.Name.TrimEnd().ToUpper())
-                .FirstOrDefault();
+            var pokemon = _pokemonRepository.GetPokemonTrimToUpper(pokemonCreate);
+           
             if(pokemon != null)
             {
                 ModelState.AddModelError("", "Pokemon already exists");
